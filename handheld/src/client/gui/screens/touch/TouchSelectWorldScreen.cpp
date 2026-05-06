@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <set>
 #include "../SimpleChooseLevelScreen.h"
-#include "TouchCreateWorldScreen.h"
+#include "../AdvancedChooseLevelScreen.h"
 
 namespace Touch {
 
@@ -408,7 +408,7 @@ void SelectWorldScreen::tick()
 			std::string name = getUniqueLevelName("perf");
 			minecraft->setScreen(new SimpleChooseLevelScreen(name));
 		#elif defined(__VITA__) || defined(__SWITCH__) || defined(__3DS__)
-			minecraft->setScreen(new CreateWorldScreen());
+			minecraft->setScreen(new AdvancedChooseLevelScreen());
 			return;
 		#else
 			int status = minecraft->platform()->getUserInputStatus();
