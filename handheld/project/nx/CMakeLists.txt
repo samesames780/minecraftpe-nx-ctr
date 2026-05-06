@@ -342,7 +342,7 @@ add_executable(${PROJECT_NAME}
   ${HANDHELD}/client/gui/screens/touch/TouchJoinGameScreen.cpp
   ${HANDHELD}/client/gui/screens/touch/TouchSelectWorldScreen.cpp
   ${HANDHELD}/client/gui/screens/touch/TouchStartMenuScreen.cpp
-  ${HANDHELD}/client/gui/screens/touch/TouchCreateWorldScreen.cpp
+  ${HANDHELD}/client/gui/screens/AdvancedChooseLevelScreen.cpp
   ${HANDHELD}/client/gui/screens/touch/TouchIngameBlockSelectionScreen.cpp
   ${HANDHELD}/client/gui/screens/UploadPhotoScreen.cpp
   ${HANDHELD}/client/gui/screens/ArmorScreen.cpp
@@ -408,6 +408,14 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 set(ROMFS_STAGING_DIR "${CMAKE_CURRENT_BINARY_DIR}/romfs_staging")
+
+file(MAKE_DIRECTORY
+    "${ROMFS_STAGING_DIR}"
+    "${ROMFS_STAGING_DIR}/data"
+    "${ROMFS_STAGING_DIR}/data/images"
+    "${ROMFS_STAGING_DIR}/data/fonts"
+    "${ROMFS_STAGING_DIR}/data/lang"
+)
 
 add_custom_target(prepare_romfs ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${ROMFS_STAGING_DIR}/data
