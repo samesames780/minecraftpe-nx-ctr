@@ -15,8 +15,12 @@ public:
     void eat(FoodItem* item);
 
     void tick(Player* player);
+
+    int getFoodLevel() const { return foodLevel; }
 private:
 	int foodLevel;
+	int exhaustionTimer;
+	int starveTimer;
 };
 
 #endif /*NET_MINECRAFT_WORLD_FOOD__SimpleFoodData_H__*/
