@@ -13,10 +13,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure
+      - name: Install cmake
+        run: apt-get update && apt-get install -y cmake
+
+      - name: Clone NovaGL
+        run: git clone --depth=1 https://github.com/efimandreev0/NovaGL.git /tmp/NovaGL
+
+      - name: Build NovaGL
+        run: |
+          mkdir -p /tmp/NovaGL/build
+          cd /tmp/NovaGL/build
+          cmake -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/cmake/3DS.cmake -DGL2CITRO3D_BUILD_EXAMPLES=OFF ..
+          make -j$(nproc)
+
+      - name: Install NovaGL into devkitPro portlibs
+        run: |
+          mkdir -p $DEVKITPRO/portlibs/3ds/include
+          mkdir -p $DEVKITPRO/portlibs/3ds/lib
+          cp -r /tmp/NovaGL/include/* $DEVKITPRO/portlibs/3ds/include/
+          find /tmp/NovaGL/build -name "*.a" -exec cp {} $DEVKITPRO/portlibs/3ds/lib/ \;
+          echo "Archivos instalados:"
+          ls -la $DEVKITPRO/portlibs/3ds/include/
+          ls -la $DEVKITPRO/portlibs/3ds/lib/
+
+      - name: Configure Minecraft
         run: cmake -DPUBLISH=on -B build -S handheld/project/ctr
 
-      - name: Build
+      - name: Build Minecraft
         run: cmake --build build -j$(nproc)
 
       - name: Find output
