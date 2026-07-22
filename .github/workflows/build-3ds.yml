@@ -1,0 +1,29 @@
+name: Build 3DS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkitarm:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -DPUBLISH=on -B build -S handheld/project/ctr
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Find output
+        run: find build -iname "*.3dsx"
+
+      - name: Upload 3dsx
+        uses: actions/upload-artifact@v4
+        with:
+          name: minecraftpe-3dsx
+          path: build/**/*.3dsx
