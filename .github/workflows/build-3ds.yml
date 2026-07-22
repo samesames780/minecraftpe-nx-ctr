@@ -17,7 +17,7 @@ jobs:
         run: apt-get update && apt-get install -y cmake
 
       - name: Clone NovaGL
-        run: git clone --depth=1 https://github.com/efimandreev0/NovaGL.git /tmp/NovaGL
+        run: git clone --depth=1 --branch CompressedAtlasData https://github.com/efimandreev0/NovaGL.git /tmp/NovaGL
 
       - name: Build NovaGL
         run: |
