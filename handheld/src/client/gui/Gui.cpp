@@ -20,6 +20,7 @@
 #include "../../platform/input/Mouse.h"
 #include "../../world/level/Level.h"
 #include "../../world/PosTranslator.h"
+#include "../../world/food/FoodConstants.h"
 
 float Gui::InvGuiScale = 1.0f / 3.0f;
 float Gui::GuiScale = 1.0f / Gui::InvGuiScale;
@@ -85,6 +86,7 @@ void Gui::render(float a, bool mouseFree, int xMouse, int yMouse) {
 		t.beginOverride();
 		t.colorABGR(0xffffffff);
 		renderHearts();
+		renderFood(screenWidth);
 		renderBubbles();
 		t.endOverrideAndDraw();
 	}
@@ -600,6 +602,24 @@ void Gui::renderHearts() {
 		}
 		if (ip2 < h) blit(xo, yo, 16 + 4 * 9, 9 * 0, 9, 9);
 		else if (ip2 == h) blit(xo, yo, 16 + 5 * 9, 9 * 0, 9, 9);
+	}
+}
+
+void Gui::renderFood(int screenWidth) {
+	int food = minecraft->player->foodData.getFoodLevel();
+
+	// Right-aligned, mirrored: rightmost icon is index 0, drawn towards the left.
+	int xxBase = screenWidth - 2 - 9;
+
+	for (int i = 0; i < FoodConstants::MAX_FOOD / 2; i++) {
+		int yo = 2;
+		int ip2 = i + i + 1;
+		int xo = xxBase - i * 8;
+
+		// background (empty) icon
+		blit(xo, yo, 0 + 0 * 9, 9 * 3, 9, 9);
+		if (ip2 < food) blit(xo, yo, 0 + 4 * 9, 9 * 3, 9, 9);
+		else if (ip2 == food) blit(xo, yo, 0 + 5 * 9, 9 * 3, 9, 9);
 	}
 }
 
