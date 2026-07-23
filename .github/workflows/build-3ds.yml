@@ -36,6 +36,12 @@ jobs:
           ls -la $DEVKITPRO/portlibs/3ds/include/
           ls -la $DEVKITPRO/portlibs/3ds/lib/
 
+      - name: Patch missing NovaGL frame wrappers
+        run: |
+          sed -i 's/nova_frame_begin();/C3D_FrameBegin(C3D_FRAME_SYNCDRAW);/' handheld/src/main_ctr.h
+          sed -i 's/nova_frame_end();/C3D_FrameEnd(0);/' handheld/src/main_ctr.h
+          grep -n "C3D_FrameBegin\|C3D_FrameEnd" handheld/src/main_ctr.h
+
       - name: Configure Minecraft
         run: cmake -DPUBLISH=on -B build -S handheld/project/ctr
 
