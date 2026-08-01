@@ -75,7 +75,7 @@ jobs:
 
       - name: Generate icon and banner images
         run: |
-          pip install --quiet Pillow --break-system-packages || pip install --quiet Pillow
+          apt-get update && apt-get install -y python3 python3-pil
           python3 - <<'EOF'
           from PIL import Image
           Image.new("RGB", (48, 48), (60, 130, 60)).save("/tmp/tools/icon.png")
