@@ -57,16 +57,21 @@ jobs:
           name: minecraftpe-3dsx
           path: build/**/*.3dsx
 
-      - name: Download makerom and bannertool
+      - name: Download makerom and build bannertool
         run: |
           mkdir -p /tmp/tools
           cd /tmp/tools
           curl -L -o makerom.zip https://github.com/3DSGuy/Project_CTR/releases/download/makerom-v0.18.3/makerom-v0.18.3-ubuntu_x86_64.zip
           unzip -o makerom.zip
-          curl -L -o bannertool.zip https://github.com/Steveice10/bannertool/releases/download/1.2.0/bannertool.zip
-          unzip -o bannertool.zip
-          chmod +x makerom bannertool/linux-x86_64/bannertool
-          find . -maxdepth 2
+          chmod +x makerom
+          apt-get update && apt-get install -y cmake git
+          git clone --depth=1 https://github.com/carstene1ns/3ds-bannertool.git
+          cmake -B 3ds-bannertool/build -S 3ds-bannertool
+          cmake --build 3ds-bannertool/build -j$(nproc)
+          find 3ds-bannertool/build -maxdepth 2 -type f -executable
+          BANNERTOOL=$(find 3ds-bannertool/build -maxdepth 2 -type f -iname "bannertool*" -executable | head -n1)
+          cp "$BANNERTOOL" /tmp/tools/bannertool
+          chmod +x /tmp/tools/bannertool
 
       - name: Generate icon and banner images
         run: |
@@ -89,8 +94,8 @@ jobs:
       - name: Build SMDH icon and banner files
         run: |
           cd /tmp/tools
-          ./bannertool/linux-x86_64/bannertool makesmdh -i icon.png -s "Minecraft PE" -l "Minecraft PE for 3DS (hambre)" -p "samesames780" -o icon.icn
-          ./bannertool/linux-x86_64/bannertool makebanner -i banner.png -a banner.wav -o banner.bnr
+          ./bannertool makesmdh -i icon.png -s "Minecraft PE" -l "Minecraft PE for 3DS (hambre)" -p "samesames780" -o icon.icn
+          ./bannertool makebanner -i banner.png -a banner.wav -o banner.bnr
 
       - name: Write RSF (CIA spec file)
         run: |
