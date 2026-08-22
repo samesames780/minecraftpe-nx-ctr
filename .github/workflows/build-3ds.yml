@@ -105,6 +105,9 @@ jobs:
             ProductCode : CTR-P-MCH1
             Logo : Homebrew
 
+          RomFs:
+            HostRoot : build/romfs_staging
+
           TitleInfo:
             Category : Application
             UniqueId : 0xff3fa
@@ -277,8 +280,13 @@ jobs:
           if [ -z "$ELF" ]; then
             ELF=$(find build -maxdepth 3 -type f -name "minecraftcpp.elf" | head -n1)
           fi
-          echo "Encontrado: $ELF"
+          echo "Encontrado elf: $ELF"
           echo "elf=$ELF" >> "$GITHUB_OUTPUT"
+
+          ROMFS=$(find build -maxdepth 2 -type d -name "romfs_staging" | head -n1)
+          echo "Encontrado romfs: $ROMFS"
+          echo "romfs=$ROMFS" >> "$GITHUB_OUTPUT"
+          find "$ROMFS" -maxdepth 1
 
       - name: Build CIA with makerom
         run: |
@@ -288,7 +296,8 @@ jobs:
             -target t \
             -elf "${{ steps.findelf.outputs.elf }}" \
             -icon /tmp/tools/icon.icn \
-            -banner /tmp/tools/banner.bnr
+            -banner /tmp/tools/banner.bnr \
+            -romfs "${{ steps.findelf.outputs.romfs }}"
           ls -la /tmp/tools/*.cia
 
       - name: Upload CIA
