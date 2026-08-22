@@ -106,7 +106,7 @@ jobs:
             Logo : Homebrew
 
           RomFs:
-            HostRoot : build/romfs_staging
+            RootPath : build/romfs_staging
 
           TitleInfo:
             Category : Application
