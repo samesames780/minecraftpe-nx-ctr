@@ -272,6 +272,10 @@ jobs:
               spi: 0x0004013000002302
               ssl: 0x0004013000002f02
           EOF
+          sed -i "s|RootPath : build/romfs_staging|RootPath : $GITHUB_WORKSPACE/build/romfs_staging|" /tmp/tools/app.rsf
+          echo "Contenido de romfs_staging:"
+          find "$GITHUB_WORKSPACE/build/romfs_staging" -maxdepth 2 2>/dev/null || echo "NO EXISTE la carpeta romfs_staging"
+          grep -n "RootPath" /tmp/tools/app.rsf
 
       - name: Locate built ELF
         id: findelf
