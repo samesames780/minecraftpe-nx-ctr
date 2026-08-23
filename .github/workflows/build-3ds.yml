@@ -103,8 +103,12 @@ jobs:
           git clone --depth=1 https://github.com/dnasdw/3dstool.git /tmp/3dstool-src
           cmake -B /tmp/3dstool-src/build -S /tmp/3dstool-src -DUSE_DEP=OFF
           cmake --build /tmp/3dstool-src/build -j$(nproc)
-          TOOLBIN=$(find /tmp/3dstool-src/build -maxdepth 3 -type f -iname "3dstool*" -executable | head -n1)
+          TOOLBIN=$(find /tmp/3dstool-src -maxdepth 4 -type f -iname "3dstool" -executable | head -n1)
           echo "3dstool encontrado en: $TOOLBIN"
+          if [ -z "$TOOLBIN" ]; then
+            echo "No se encontro con find, probando ruta conocida"
+            TOOLBIN=/tmp/3dstool-src/bin/Release/3dstool
+          fi
           cp "$TOOLBIN" /tmp/tools/3dstool
           chmod +x /tmp/tools/3dstool
           /tmp/tools/3dstool -cvtf romfs "$GITHUB_WORKSPACE/build/romfs.bin" --romfs-dir "$GITHUB_WORKSPACE/build/romfs_staging"
