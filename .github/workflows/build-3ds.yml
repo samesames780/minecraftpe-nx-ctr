@@ -122,9 +122,6 @@ jobs:
             ProductCode : CTR-P-MCH1
             Logo : Homebrew
 
-          RomFs:
-            RootPath : build/romfs.bin
-
           TitleInfo:
             Category : Application
             UniqueId : 0xff3fa
@@ -289,10 +286,8 @@ jobs:
               spi: 0x0004013000002302
               ssl: 0x0004013000002f02
           EOF
-          sed -i "s|RootPath : build/romfs.bin|RootPath : $GITHUB_WORKSPACE/build/romfs.bin|" /tmp/tools/app.rsf
           echo "Verificando romfs.bin:"
           ls -la "$GITHUB_WORKSPACE/build/romfs.bin" 2>/dev/null || echo "NO EXISTE romfs.bin"
-          grep -n "RootPath" /tmp/tools/app.rsf
 
       - name: Locate built ELF
         id: findelf
@@ -304,10 +299,8 @@ jobs:
           echo "Encontrado elf: $ELF"
           echo "elf=$ELF" >> "$GITHUB_OUTPUT"
 
-          ROMFS=$(find build -maxdepth 2 -type d -name "romfs_staging" | head -n1)
-          echo "Encontrado romfs: $ROMFS"
-          echo "romfs=$ROMFS" >> "$GITHUB_OUTPUT"
-          find "$ROMFS" -maxdepth 1
+          echo "romfs=$GITHUB_WORKSPACE/build/romfs.bin" >> "$GITHUB_OUTPUT"
+          ls -la "$GITHUB_WORKSPACE/build/romfs.bin"
 
       - name: Build CIA with makerom
         run: |
